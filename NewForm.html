@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dictionary Entry Tool</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 700px; margin: auto; }
+    input, textarea { width: 100%; padding: 8px; margin: 6px 0; }
+    button { padding: 10px 20px; margin-right: 10px; }
+    pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h2>French - Tibetan - English Dictionary Entry Tool</h2>
+
+  <label>Tibetan Word:</label>
+  <input type="text" id="tibetan" />
+
+  <label>Tibetan Explanation:</label>
+  <textarea id="tibetanExplanation"></textarea>
+
+  <label>French Word (Meaning):</label>
+  <input type="text" id="french" />
+
+  <label>French Explanation:</label>
+  <textarea id="frenchExplanation"></textarea>
+
+  <label>English Word (Meaning):</label>
+  <input type="text" id="english" />
+
+  <label>English Explanation:</label>
+  <textarea id="englishExplanation"></textarea>
+
+  <label>Part of Speech:</label>
+  <input type="text" id="partOfSpeech" />
+
+  <label>Audio URL:</label>
+  <input type="text" id="audio" />
+
+  <button onclick="addEntry()">Add Entry</button>
+  <button onclick="downloadJson()">Download JSON</button>
+
+  <h3>Generated JSON:</h3>
+  <pre id="jsonOutput">{}</pre>
+
+  <script>
+    const dictionary = [];
+
+    function addEntry() {
+      const tibetan = document.getElementById('tibetan').value.trim();
+      const tibetanExplanation = document.getElementById('tibetanExplanation').value.trim();
+      const french = document.getElementById('french').value.trim();
+      const frenchExplanation = document.getElementById('frenchExplanation').value.trim();
+      const english = document.getElementById('english').value.trim();
+      const englishExplanation = document.getElementById('englishExplanation').value.trim();
+      const partOfSpeech = document.getElementById('partOfSpeech').value.trim();
+      const audio = document.getElementById('audio').value.trim();
+
+      if (!tibetan || !french || !english) {
+        alert('Tibetan, French, and English words are required.');
+        return;
+      }
+
+      const entry = {
+        tibetan_word: tibetan,
+        tibetan_explanation: tibetanExplanation,
+        french_word: french,
+        french_explanation: frenchExplanation,
+        english_word: english,
+        english_explanation: englishExplanation,
+        part_of_speech: partOfSpeech,
+        audio: audio
+      };
+
+      dictionary.push(entry);
+
+      document.getElementById('jsonOutput').textContent = JSON.stringify(dictionary, null, 2);
+
+      // Clear fields
+      document.querySelectorAll("input, textarea").forEach(e => e.value = '');
+    }
+
+    function downloadJson() {
+      const blob = new Blob([JSON.stringify(dictionary, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'dictionary.json';
+      link.click();
+    }
+  </script>
+</body>
+</html>
